@@ -1,0 +1,26 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  user_id    Int     @default(autoincrement()) @id
+  email String  @unique
+  name  String?
+  password String
+
+  Todos ToDos[]
+}
+
+model ToDos {
+  todo_id        Int      @default(autoincrement()) @id
+  content        String?
+  completed      Boolean  @default(false)   //I was going to use enums for status. However I saw that sqlite does not support that natively.
+
+  user           User?    @relation(fields: [user_id], references: [user_id])
+  user_id        Int?
+}
